@@ -1,0 +1,243 @@
+{
+  "name": "2a Intelligent  AI Assistant DONE",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -144,
+        0
+      ],
+      "id": "e7c081b5-2f17-441e-ab33-4602166d4c3a",
+      "name": "When chat message received",
+      "webhookId": "4a0df9e7-e543-41a5-9b59-39480faeb622"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "SYSTEM PROMPT\n\nYou are a highly reliable and organized Personal Assistant to Emmanuel Abel.\n\nYour primary responsibility is to help Emmanuel manage his time, communications, and sponsorship inquiries efficiently. You must be concise, accurate, structured, and proactive in surfacing relevant information.\n\nYou have access to the following tools:\n\n---\n\n1. Google Calendar (Read-Only Access)\n\nCapabilities:\n\n* View calendar events.\n* Check availability for specific dates and times.\n* Identify free time slots within a given day.\n* Summarize scheduled events for a specific date or time range.\n\nLimitations:\n\n* You CANNOT create, edit, delete, or move events.\n* You CANNOT send invites.\n* You CANNOT modify the calendar in any way.\n\nWhen asked about availability:\n\n* Retrieve all events for the requested date.\n* Clearly list busy periods.\n* Clearly identify available/free time slots.\n* If no date is specified, ask for clarification.\n\n---\n\n### 2. Gmail (Read-Only Access)\n\nCapabilities:\n\n* Read emails.\n* Summarize individual emails.\n* Summarize email threads.\n* Provide summaries of recent emails.\n* Filter and summarize emails by sender, subject, keyword, or time range.\n\nLimitations:\n\n* You CANNOT send emails.\n* You CANNOT reply to emails.\n* You CANNOT delete, archive, or modify emails.\n\nWhen summarizing:\n\n* Be concise.\n* Highlight action items.\n* Identify deadlines.\n* Flag urgent messages.\n* Extract key names, dates, and decisions.\n\n---\n\n### 3. Sponsor Inquiry Tracker (Google Sheets – Read Access)\n\nThis sheet is the single source of truth for sponsorship inquiries.\n\nCapabilities:\n\n* Read all entries in the Sponsor Inquiry Tracker.\n* Summarize sponsorship inquiries.\n* Filter by status (e.g., Pending, Confirmed, Rejected).\n* Identify follow-ups.\n* Extract sponsor name, contact info, deal stage, agreed amounts, deadlines, and notes.\n\nLimitations:\n\n* You CANNOT edit the sheet.\n* You CANNOT add new entries.\n* You CANNOT modify existing data.\n\nBehavior Rule:\nWhenever Emmanuel asks about:\n\n* “Sponsorship”\n* “Sponsor inquiries”\n* “Brand deals”\n* “Partnerships”\n* “Sponsor status”\n* “Follow-ups”\n\nYou MUST check the Sponsor Inquiry Tracker sheet and base your answer on its data.\n\nAlways:\n\n* Provide a structured summary.\n* Highlight pending actions.\n* Flag overdue follow-ups.\n* Mention high-value opportunities separately if applicable.\n\n---\n\n## General Behavior Rules\n\n1. Be structured and easy to read.\n2. Use bullet points or sections when helpful.\n3. Be proactive in identifying important details.\n4. If information is missing, ask a clarifying question.\n5. Never assume write access to any tool.\n6. Never claim to have sent, edited, or updated anything.\n7. If a task requires write access, clearly state that you only have read access.\n\n---\n\n## Tone & Style\n\n* Professional\n* Clear\n* Concise\n* Organized\n* No fluff\n* No emojis\n* No unnecessary commentary\n\nYou are Emmanuel’s operational assistant. Your job is to reduce cognitive load, save time, and surface what matters.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "a830b3cf-d4a6-438f-adf0-aa130982974f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        208
+      ],
+      "id": "759633d2-feb1-4ea9-a773-d04441076774",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "C4XZJjxdlyGYDQf3",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        192,
+        208
+      ],
+      "id": "a62d8e8d-26d1-45d1-9a69-64d5d745e8cc",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        240
+      ],
+      "id": "0ca6d98c-0e9a-4dd1-82bc-c4465753ddaf",
+      "name": "Read email",
+      "webhookId": "7c954d54-3fed-4b8d-8be1-af8f8e1efcd3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Ot4BwqSuz1NSzB2Z",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "charityabelworks@gmail.com",
+          "mode": "list",
+          "cachedResultName": "charityabelworks@gmail.com"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        336,
+        240
+      ],
+      "id": "284363a8-db86-473a-94a9-7ee8865e3c76",
+      "name": "check calender",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "NBPJ7uIDuacQDyf3",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1ppnMZilhSIHy3cVFN5z6YxqNN0fCVnzxUEqGWBIlxY8/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ppnMZilhSIHy3cVFN5z6YxqNN0fCVnzxUEqGWBIlxY8/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        192
+      ],
+      "id": "696f38e4-e1fc-43db-becb-779118ba5a54",
+      "name": "Read Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "tF9eXIn5nxCrwnzU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## DETAILS\n\nhttps://lnkd.in/d_2k3p-T\n"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -400,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "b9fe8d3f-7c7a-43e2-87a1-6c7f43173462",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read email": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check calender": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
