@@ -50,6 +50,17 @@ Chat Message
 
 ---
 
+## Screenshots
+
+### Workflow Overview
+![Workflow Overview](screenshots/workflow.png)
+
+### Agent Execution
+![Agent Execution](screenshots/execution.png)
+
+### Testing the Agent
+![Testing](screenshots/testing.png)
+
 ## Workflow File
 
 The full n8n workflow is in [`Intelligent_AI_Assistant.json`](./workflow/Intelligent_AI_Assistant.json). Import it directly into your n8n instance.
